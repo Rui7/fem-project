@@ -27,6 +27,8 @@ end
 t_areas
 
 
+edof = 1:size(t,2);
+edof = [edof; t(1:3,:)]
 
 
 
