@@ -9,10 +9,11 @@ T0 = 25;
 T_inf = 15;
 Q = 1e5;
 alpha_c = 100;
+thickness = 50;
+
 n_elem = size(t,2);
 n_nod = size(p,2);
 elem_nod = 3;
-thickness = 50;
 
 % material data
 order = {'Aluminium'; 'Steel'; 'Copper'; 'Electricity core'};
@@ -31,6 +32,19 @@ k = [238, 20, 385, 1.6];
 edof = (1:n_elem);
 edof = [edof; t(1:3,:)]';
 
+dof = (1:n_nod)'; % rätt?? fattar inte dof
+
+er = e([1 2 5],:);
+
+conv_segments = [15 16];
+conv_segments2 = [18 19];
+edges_conv = [];
+for i = 1:size(er,2)
+    if ismember(er(3,i),conv_segments)
+        edges_conv = [edges_conv er(1:2,i)];
+    end
+end
+
 coord = p';
 
 q_n = @(T) alpha_c * (T - T_inf);
@@ -39,11 +53,11 @@ C_xy = @(ex,ey) [[1;1;1] ex ey];
 B_bar = [0 1 0; 0 0 1];
 D= eye(2); %VAD ÄR D?
 
-K = zeros(n_elem);
-CC = zeros(n_elem);
+K = zeros(n_nod);
+CC = zeros(n_nod);
+f_l = zeros(n_nod,1);
 
 for i=1:n_elem
-    dof = (1:n_nod)'; % rätt?? fattar inte dof
     [ex,ey]=coordxtr(edof,coord,dof,elem_nod);
     C = C_xy(ex(i,:)',ey(i,:)');
     Ae = det(C)/2;
@@ -55,12 +69,13 @@ for i=1:n_elem
     
     Ce=plantml(ex(i,:),ey(i,:),1);
     CC=assem(edof(i,:),CC,Ce);
-   
     
+    fe = Q/3*thickness*Ae*[1;1;1];
+    f_l = insert(edof(i,:),f_l,fe); %finns snabbare insert i handledning
 end
 
 K=sparse(K);
-C=sparse(C);
+CC=sparse(CC);
 
 %solve
 % Tsnap=step1(K,C,d0,ip,f,pbound)
