@@ -1,7 +1,4 @@
-% load e, p and t
-load('e.mat')
-load('p.mat')
-load('t.mat')
+%load
 
 T0 = 25;
 T_inf = 15;
