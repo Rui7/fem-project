@@ -8,6 +8,7 @@ T0 = 25;
 T_inf = 15;
 Q = 1e5;
 a_c = 100;
+n_elm = size(t,2);
 
 % material data
 order = {'Aluminium'; 'Steel'; 'Copper'; 'Electricity core'};
