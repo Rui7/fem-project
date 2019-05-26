@@ -9,6 +9,7 @@ T_inf = 15;
 Q = 1e5;
 a_c = 100;
 n_elm = size(t,2);
+n_nod = size(p,2);
 
 % material data
 order = {'Aluminium'; 'Steel'; 'Copper'; 'Electricity core'};
@@ -27,8 +28,9 @@ end
 t_areas
 
 
-edof = 1:size(t,2);
-edof = [edof; t(1:3,:)]
+edof = 1:n_elm;
+edof = [edof; t(1:3,:)];
+
 
 
 
