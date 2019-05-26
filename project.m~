@@ -1,4 +1,7 @@
-%load
+% load e, p and t
+load('e.mat')
+load('p.mat')
+load('t.mat')
 
 T0 = 25;
 T_inf = 15;
@@ -14,7 +17,7 @@ c_p = [903, 460, 386, 900];
 k = [238, 20, 385, 1.6];
 
 
-
+t_areas = zeros(t,1);
 
 
 
