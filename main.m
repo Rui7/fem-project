@@ -3,11 +3,13 @@ load('e.mat')
 load('p.mat')
 load('t.mat')
 
+% initialize
 T0 = 25;
 T_inf = 15;
 Q = 1e5;
 a_c = 100;
 
+% material data
 order = {'Aluminium'; 'Steel'; 'Copper'; 'Electricity core'};
 E = [70, 210, 128 500];
 ny = [.33, .3, .36, .45];
