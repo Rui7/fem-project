@@ -31,6 +31,8 @@ k = [238, 20, 385, 1.6];
 edof = (1:n_elem);
 edof = [edof; t(1:3,:)]';
 
+coord = p';
+
 q_n = @(T) alpha_c * (T - T_inf);
 C_xy = @(ex,ey) [[1;1;1] ex ey];
 
@@ -41,7 +43,6 @@ K = zeros(n_elem);
 CC = zeros(n_elem);
 
 for i=1:n_elem
-    coord = p';
     dof = (1:n_nod)'; % rätt?? fattar inte dof
     [ex,ey]=coordxtr(edof,coord,dof,elem_nod);
     C = C_xy(ex(i,:)',ey(i,:)');
