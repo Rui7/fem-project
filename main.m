@@ -18,10 +18,12 @@ rho = [2710, 9700, 8930, 2000];
 c_p = [903, 460, 386, 900];
 k = [238, 20, 385, 1.6];
 
+t_areas = zeros(size(t,1),1);
+for i = 1:size(t,2)
+    t_areas(i) = triangleArea(t(:,i),p);
+end
 
-
-
-
+t_areas
 
 
 
