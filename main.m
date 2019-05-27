@@ -79,3 +79,25 @@ CC=sparse(CC);
 
 %solve
 % Tsnap=step1(K,C,d0,ip,f,pbound)
+
+%DETTA HAR MICKE PRECIS LADDAT UPP
+%Kefe
+Ke = zeros(1,size(t,2));
+fe = zeros(1,size(t,2));
+for i = 1:size(t,2)
+   triangle = t(:,i);
+   ex = zeros(1,3);
+   ey = zeros(1,3);
+   eq = 0;
+   for j = 1:3
+    ex(j) = p(1,triangle(j));
+    ey(j) = p(2,triangle(j));
+   end
+   D = subdomain(triangle(4));
+   if triangle(4) == 3
+       eq = 100000;
+   end
+   [Ke(i), fe(i)] = flow2te(ex, ey, thickness, D*eye(2), eq);
+end
+    
+    
