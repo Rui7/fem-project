@@ -51,7 +51,7 @@ q_n = @(T) alpha_c * (T - T_inf);
 C_xy = @(ex,ey) [[1;1;1] ex ey];
 
 B_bar = [0 1 0; 0 0 1];
-D= eye(2); %VAD ÄR D?
+%D= eye(2); %VAD ÄR D?
 
 K = zeros(n_nod);
 CC = zeros(n_nod);
@@ -61,7 +61,7 @@ for i=1:n_elem
     [ex,ey]=coordxtr(edof,coord,dof,elem_nod);
     C = C_xy(ex(i,:)',ey(i,:)');
     Ae = det(C)/2;
-    % D = k_material*eye(2) eller mer avancerad?
+    D = k(subdomain(t(4,i)))*eye(2); %eller mer avancerad?
     Ke = C' \ B_bar' * D * B_bar / C * thickness * Ae;
     % Ke = flw2te(ex(i,:),ey(i,:),thickness,D);
 
@@ -93,11 +93,11 @@ for i = 1:size(t,2)
     ex(j) = p(1,triangle(j));
     ey(j) = p(2,triangle(j));
    end
-   D = subdomain(triangle(4));
+   D = k(subdomain(triangle(4)));
    if triangle(4) == 3
        eq = 100000;
    end
-   [Ke(i), fe(i)] = flow2te(ex, ey, thickness, D*eye(2), eq);
+   %[Ke(i), fe(i)] = flw2te(ex, ey, thickness, D*eye(2), eq);
 end
     
     
