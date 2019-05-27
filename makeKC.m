@@ -13,7 +13,7 @@ for i=1:n_elem
     p2=edges_conv(2,i);
     y1=coord(p1,2);
     y2=coord(p2,2);
-    L=y2-y1;
+    L=(y2-y1)*1e-3;
     fe_ba = alpha_c*thickness*L/6 * [2 1;1 2];
     fe_b = T_inf*thickness*L*.5*[1;1];
     

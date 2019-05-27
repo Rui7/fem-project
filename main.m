@@ -10,7 +10,7 @@ T0 = 25;
 T_inf = 15;
 Q = 1e5;
 alpha_c = 100;
-thickness = 50;
+thickness = 50e-3;
 
 n_elem = size(t,2);
 n_nod = size(p,2);
@@ -18,7 +18,7 @@ elem_nod = 3;
 
 % material data
 order = {'Aluminium'; 'Steel'; 'Copper'; 'Electricity core'};
-E = [70, 210, 128, 500];
+E = [70, 210, 128, 500]*1e9;
 ny = [.33, .3, .36, .45];
 alpha = [69e-6, 35e-6, 51e-6, 20e-6];
 rho = [2710, 9700, 8930, 2000];
@@ -59,11 +59,12 @@ for i=1:n_elem
     D = k(mat_index)*eye(2); %eller mer avancerad?
     
     eq = 0;
-    if mat_index == 3
-       eq = Q;
-    end
     C = C_xy(ex(i,:)',ey(i,:)');
-    Ae = det(C)/2;
+    Ae = det(C)/2*1e-6;
+    
+    if mat_index == 3
+       eq = Q/3*thickness*Ae;
+    end
     
     %Ke = C' \ B_bar' * D * B_bar / C * thickness * Ae;
     [Ke,fe] = flw2te(ex(i,:),ey(i,:),thickness,D,eq);
@@ -117,8 +118,8 @@ fill(ex',ey',eT','EdgeColor','none')
 title('Temperature distribution [C]')
 colormap(hot);
 colorbar;
-xlabel('x-position [m]')
-ylabel('y-position [m]')
+xlabel('x-position [mm]')
+ylabel('y-position [mm]')
 %axis equal
 
 %DETTA HAR MICKE PRECIS LADDAT UPP
