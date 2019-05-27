@@ -29,6 +29,8 @@ k = [238, 20, 385, 1.6];
 %     t_areas(i) = triangleArea(t(:,i),p);
 % end
 
+a0 = T0*ones(n_nod,1);
+
 edof = (1:n_elem);
 edof = [edof; t(1:3,:)]';
 
@@ -58,20 +60,28 @@ CC = zeros(n_nod);
 f_l = zeros(n_nod,1);
 
 for i=1:n_elem
-    mat = subdomain(t(4,i)); % index of material constants
+    mat_index = subdomain(t(4,i)); % index of material constants
+    rhoe = rho(mat_index);
+    ce = c_p(mat_index);
+    D = k(mat_index)*eye(2); %eller mer avancerad?
+    
     [ex,ey]=coordxtr(edof,coord,dof,elem_nod);
+    eq = 0;
+    if mat_index == 3
+       eq = Q;
+    end
     C = C_xy(ex(i,:)',ey(i,:)');
     Ae = det(C)/2;
-    D = k(mat)*eye(2); %eller mer avancerad?
-    Ke = C' \ B_bar' * D * B_bar / C * thickness * Ae;
-    % Ke = flw2te(ex(i,:),ey(i,:),thickness,D);
+    
+    %Ke = C' \ B_bar' * D * B_bar / C * thickness * Ae;
+    [Ke,fe] = flw2te(ex(i,:),ey(i,:),thickness,D,eq);
 
     K = assem(edof(i,:),K,Ke); %finns snabbare assem i handledning
     
-    Ce=plantml(ex(i,:),ey(i,:),1);
+    Ce=plantml(ex(i,:),ey(i,:),rhoe*ce);
     CC=assem(edof(i,:),CC,Ce);
     
-    fe = Q/3*thickness*Ae*[1;1;1];
+    %fe = Q/3*thickness*Ae*[1;1;1];
     f_l = insert(edof(i,:),f_l,fe); %finns snabbare insert i handledning
 end
 
@@ -79,7 +89,7 @@ K=sparse(K);
 CC=sparse(CC);
 
 %solve
-% Tsnap=step1(K,C,d0,ip,f,pbound)
+% Tsnap=step1(K,C,a0,ip,f,pbound)
 
 %DETTA HAR MICKE PRECIS LADDAT UPP
 %Kefe
