@@ -58,10 +58,11 @@ CC = zeros(n_nod);
 f_l = zeros(n_nod,1);
 
 for i=1:n_elem
+    mat = subdomain(t(4,i)); % index of material constants
     [ex,ey]=coordxtr(edof,coord,dof,elem_nod);
     C = C_xy(ex(i,:)',ey(i,:)');
     Ae = det(C)/2;
-    D = k(subdomain(t(4,i)))*eye(2); %eller mer avancerad?
+    D = k(mat)*eye(2); %eller mer avancerad?
     Ke = C' \ B_bar' * D * B_bar / C * thickness * Ae;
     % Ke = flw2te(ex(i,:),ey(i,:),thickness,D);
 
