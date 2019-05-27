@@ -15,7 +15,7 @@ for i=1:n_elem
     y2=coord(p2,2);
     L=(y2-y1);%*1e-3;
     fe_ba = alpha_c*thickness*L/6 * [2 1;1 2];
-    fe_b = T_inf*thickness*L*.5*[1;1];
+    fe_b = alpha_c*T_inf*thickness*L*.5*[1;1];
     
     K_C = assem(edgedof(i,:),K_C,fe_ba);
     f_b = insert(edgedof(i,:),f_b,fe_b);
