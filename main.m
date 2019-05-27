@@ -95,8 +95,8 @@ end
 K_C = zeros(n_nod);
 f_b = zeros(n_nod,1);
 
-K_C = makeKC(K_C,f_b,edges_conv_al,coord, alpha_c, thickness, T_inf);
-K_C = makeKC(K_C,f_b,edges_conv_st,coord, alpha_c, thickness, T_inf);
+[K_C,f_b] = makeKC(K_C,f_b,edges_conv_al,coord, alpha_c, thickness, T_inf);
+[K_C,f_b] = makeKC(K_C,f_b,edges_conv_st,coord, alpha_c, thickness, T_inf);
 
 Kprim = sparse(K+K_C);
 f = sparse(f_l + f_b);
@@ -106,23 +106,23 @@ f = sparse(f_l + f_b);
 
 %DETTA HAR MICKE PRECIS LADDAT UPP
 %Kefe
-Ke = zeros(1,size(t,2));
-fe = zeros(1,size(t,2));
-for i = 1:size(t,2)
-   triangle = t(:,i);
-   ex = zeros(1,3);
-   ey = zeros(1,3);
-   eq = 0;
-   for j = 1:3
-    ex(j) = p(1,triangle(j));
-    ey(j) = p(2,triangle(j));
-   end
-   D = k(subdomain(triangle(4)));
-   if triangle(4) == 3
-       eq = 100000;
-   end
-   %[Ke(i), fe(i)] = flw2te(ex, ey, thickness, D*eye(2), eq);
-end
+% Ke = zeros(1,size(t,2));
+% fe = zeros(1,size(t,2));
+% for i = 1:size(t,2)
+%    triangle = t(:,i);
+%    ex = zeros(1,3);
+%    ey = zeros(1,3);
+%    eq = 0;
+%    for j = 1:3
+%     ex(j) = p(1,triangle(j));
+%     ey(j) = p(2,triangle(j));
+%    end
+%    D = k(subdomain(triangle(4)));
+%    if triangle(4) == 3
+%        eq = 100000;
+%    end
+%    %[Ke(i), fe(i)] = flw2te(ex, ey, thickness, D*eye(2), eq);
+% end
     
 % edgedof = 1:size(er,2);
 % edgedof = [edgedof ; er(1:2,:)];
