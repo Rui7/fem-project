@@ -29,17 +29,12 @@ rho = [2710, 9700, 8930, 2000];
 c_p = [903, 460, 386, 900];
 k = [238, 20, 385, 1.6];
 
-% t_areas = zeros(n_elem,1);
-% for i = 1:n_elem
-%     t_areas(i) = triangleArea(t(:,i),p);
-% end
-
 a0 = T0*ones(n_nod,1);
 
 edof = (1:n_elem);
 edof = [edof; t(1:3,:)]';
 
-dof = (1:n_nod)'; % rätt?? fattar inte dof
+dof = (1:n_nod)';
 
 er = e([1 2 5],:);
 
@@ -59,14 +54,14 @@ for i=1:n_elem
     mat_index = subdomain(t(4,i)); % index of material constants
     rhoe = rho(mat_index);
     ce = c_p(mat_index);
-    D = k(mat_index)*eye(2); %eller mer avancerad?
+    D = k(mat_index)*eye(2);
     
     eq = 0;
     C = C_xy(ex(i,:)',ey(i,:)');
-    Ae = det(C)/2;%*1e-6;
+    Ae = det(C)/2;
     
     if mat_index == 4
-       eq = Q;%*thickness*Ae;
+       eq = Q;
     end
     
     %Ke = C' \ B_bar' * D * B_bar / C * thickness * Ae;
@@ -85,8 +80,7 @@ K=sparse(K);
 CC=sparse(CC);
 
 conv_segments_al = [15,18];
-conv_segments_st = [16,19];
-%conv_segments2 = [18 19]; 
+conv_segments_st = [16,19]; 
 edges_conv_al = [];
 edges_conv_st = [];
 for i = 1:size(er,2)
@@ -151,28 +145,4 @@ xlabel('x-position [m]')
 ylabel('y-position [m]')
 %axis equal
 
-
-
-%DETTA HAR MICKE PRECIS LADDAT UPP
-%Kefe
-% Ke = zeros(1,size(t,2));
-% fe = zeros(1,size(t,2));
-% for i = 1:size(t,2)
-%    triangle = t(:,i);
-%    ex = zeros(1,3);
-%    ey = zeros(1,3);
-%    eq = 0;
-%    for j = 1:3
-%     ex(j) = p(1,triangle(j));
-%     ey(j) = p(2,triangle(j));
-%    end
-%    D = k(subdomain(triangle(4)));
-%    if triangle(4) == 3
-%        eq = 100000;
-%    end
-%    %[Ke(i), fe(i)] = flw2te(ex, ey, thickness, D*eye(2), eq);
-% end
-    
-% edgedof = 1:size(er,2);
-% edgedof = [edgedof ; er(1:2,:)];
     
