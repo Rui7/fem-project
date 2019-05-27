@@ -1,4 +1,5 @@
 % load e, p and t
+clear all;
 addpath(genpath('calfem/'))
 load('e.mat')
 load('p.mat')
@@ -94,27 +95,11 @@ end
 K_C = zeros(n_nod);
 f_b = zeros(n_nod,1);
 
-n_elem_al = size(edges_conv_al,2);
-n_elem_st = size(edges_conv_st,2);
+K_C = makeKC(K_C,f_b,edges_conv_al,coord, alpha_c, thickness, T_inf);
+K_C = makeKC(K_C,f_b,edges_conv_st,coord, alpha_c, thickness, T_inf);
 
-edgedof_al = 1:n_elem_al;
-edgedof_al = [edgedof_al ; edges_conv_al]';
-
-for i=1:n_elem_al
-    mat_index = 1;
-    p1=edges_conv_al(1,i);
-    p2=edges_conv_al(2,i);
-    y1=coord(p1,2);
-    y2=coord(p2,2);
-    L=y2-y1;
-    fe_ba = alpha_c*thickness*L;
-    fe_b = T_inf*thickness*L;%*[1;1];
-    
-    K_C = assem(edgedof_al(i,:),K_C,fe_ba);
-    f_b = insert(edgedof_al(i,:),f_b,fe_b);
-end
-
-
+Kprim = sparse(K+K_C);
+f = sparse(f_l + f_b);
 
 %solve
 % Tsnap=step1(K,C,a0,ip,f,pbound)
