@@ -102,14 +102,13 @@ f_b = zeros(n_nod,1);
 Kprim = sparse(K+K_C);
 f = sparse(f_l + f_b);
 
-%solve
-% Tsnap=step1(K,C,a0,ip,f,pbound)
-
 % bc = [edges_conv_al(:); edges_conv_st(:)];
 % bc = unique(bc);
 % bc = [bc T_inf*ones(length(bc),1)];
 
-a=solveq(Kprim,f_l);
+%solve
+a=solveq(Kprim,f);
+% Tsnap=step1(K,CC,a0,ip,f,pbound)
 
 %plot
 eT=extract(edof,a);
