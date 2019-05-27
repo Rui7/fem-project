@@ -111,4 +111,6 @@ for i = 1:size(t,2)
    %[Ke(i), fe(i)] = flw2te(ex, ey, thickness, D*eye(2), eq);
 end
     
+edgedof = 1:size(er,2);
+edgedof = [edgedof ; er(1:2,:)];
     
