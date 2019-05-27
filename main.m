@@ -11,6 +11,7 @@ p=p*1e-3;
 T0 = 25;
 T_inf = 15;
 Q = 1e5;
+%Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
 thickness = 50e-3;
 
@@ -110,7 +111,17 @@ f = sparse(f_l + f_b);
 
 %solve
 a=solveq(Kprim,f);
-% Tsnap=step1(K,CC,a0,ip,f,pbound)
+dt=2;
+T=6;
+alpha_method=.5; %trapezoidal
+nsnap = 4;
+nhist=[];
+time=[0,2,4,6];
+
+ip=[dt,T,alpha_method,[nsnap, nhist, time, dof']];
+pbound=[];
+
+Tsnap=step1(Kprim,CC,a0,ip,f,pbound);
 
 %plot
 eT=extract(edof,a);
