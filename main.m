@@ -50,13 +50,14 @@ K = zeros(n_nod);
 CC = zeros(n_nod);
 f_l = zeros(n_nod,1);
 
+[ex,ey]=coordxtr(edof,coord,dof,elem_nod);
+
 for i=1:n_elem
     mat_index = subdomain(t(4,i)); % index of material constants
     rhoe = rho(mat_index);
     ce = c_p(mat_index);
     D = k(mat_index)*eye(2); %eller mer avancerad?
     
-    [ex,ey]=coordxtr(edof,coord,dof,elem_nod);
     eq = 0;
     if mat_index == 3
        eq = Q;
@@ -103,6 +104,23 @@ f = sparse(f_l + f_b);
 
 %solve
 % Tsnap=step1(K,C,a0,ip,f,pbound)
+
+% bc = [edges_conv_al(:); edges_conv_st(:)];
+% bc = unique(bc);
+% bc = [bc T_inf*ones(length(bc),1)];
+
+a=solveq(Kprim,f_l);
+
+%plot
+eT=extract(edof,a);
+figure()
+fill(ex',ey',eT','EdgeColor','none')
+title('Temperature distribution [C]')
+colormap(hot);
+colorbar;
+xlabel('x-position [m]')
+ylabel('y-position [m]')
+%axis equal
 
 %DETTA HAR MICKE PRECIS LADDAT UPP
 %Kefe
