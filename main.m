@@ -38,22 +38,12 @@ dof = (1:n_nod)'; % rätt?? fattar inte dof
 
 er = e([1 2 5],:);
 
-conv_segments = [15 16];
-conv_segments2 = [18 19];
-edges_conv = [];
-for i = 1:size(er,2)
-    if ismember(er(3,i),conv_segments)
-        edges_conv = [edges_conv er(1:2,i)];
-    end
-end
-
 coord = p';
 
 q_n = @(T) alpha_c * (T - T_inf);
 C_xy = @(ex,ey) [[1;1;1] ex ey];
 
 B_bar = [0 1 0; 0 0 1];
-%D= eye(2); %VAD ÄR D?
 
 K = zeros(n_nod);
 CC = zeros(n_nod);
@@ -88,6 +78,44 @@ end
 K=sparse(K);
 CC=sparse(CC);
 
+conv_segments_al = [15,18];
+conv_segments_st = [16,19];
+%conv_segments2 = [18 19]; 
+edges_conv_al = [];
+edges_conv_st = [];
+for i = 1:size(er,2)
+    if ismember(er(3,i),conv_segments_al)
+        edges_conv_al = [edges_conv_al er(1:2,i)];
+    elseif ismember(er(3,i),conv_segments_st)
+        edges_conv_st = [edges_conv_st er(1:2,i)];
+    end
+end
+
+K_C = zeros(n_nod);
+f_b = zeros(n_nod,1);
+
+n_elem_al = size(edges_conv_al,2);
+n_elem_st = size(edges_conv_st,2);
+
+edgedof_al = 1:n_elem_al;
+edgedof_al = [edgedof_al ; edges_conv_al]';
+
+for i=1:n_elem_al
+    mat_index = 1;
+    p1=edges_conv_al(1,i);
+    p2=edges_conv_al(2,i);
+    y1=coord(p1,2);
+    y2=coord(p2,2);
+    L=y2-y1;
+    fe_ba = alpha_c*thickness*L;
+    fe_b = T_inf*thickness*L;%*[1;1];
+    
+    K_C = assem(edgedof_al(i,:),K_C,fe_ba);
+    f_b = insert(edgedof_al(i,:),f_b,fe_b);
+end
+
+
+
 %solve
 % Tsnap=step1(K,C,a0,ip,f,pbound)
 
@@ -111,6 +139,6 @@ for i = 1:size(t,2)
    %[Ke(i), fe(i)] = flw2te(ex, ey, thickness, D*eye(2), eq);
 end
     
-edgedof = 1:size(er,2);
-edgedof = [edgedof ; er(1:2,:)];
+% edgedof = 1:size(er,2);
+% edgedof = [edgedof ; er(1:2,:)];
     
