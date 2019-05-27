@@ -10,6 +10,7 @@ p=p*1e-3;
 % initialize
 T0 = 25;
 T_inf = 15;
+T_inf = 25; %uppgift b
 Q = 1e5;
 %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -115,7 +116,7 @@ dt=2;
 T=8;
 alpha_method=.5; %trapezoidal
 nsnap = 4;
-nhist=4;
+nhist=1;
 time=[0,2,4,6];
 
 ip=[dt,T,alpha_method,[nsnap, nhist, time, dof']];
@@ -123,6 +124,8 @@ pbound=[];
 
 Tsnap=step1(Kprim,CC,a0,ip,f,pbound);
 
+Tmin=min(min(Tsnap));
+Tmax=max(max(Tsnap));
 figure()
 for i=1:nsnap
     eT=extract(edof,Tsnap(:,i));
@@ -133,17 +136,19 @@ for i=1:nsnap
     colorbar;
     xlabel('x-position [m]')
     ylabel('y-position [m]')
+    axis([0 .025 0 .05])
+    caxis([Tmin Tmax])
 end
 
 %plot
-%eT=extract(edof,a);
-% figure()
-% fill(ex',ey',eT','EdgeColor','none')
-% title('Temperature distribution [C]')
-% colormap(hot);
-% colorbar;
-% xlabel('x-position [m]')
-% ylabel('y-position [m]')
+eT=extract(edof,a);
+figure()
+fill(ex',ey',eT','EdgeColor','none')
+title('Temperature distribution [C]')
+colormap(hot);
+colorbar;
+xlabel('x-position [m]')
+ylabel('y-position [m]')
 %axis equal
 
 
