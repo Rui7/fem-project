@@ -43,7 +43,6 @@ er = e([1 2 5],:);
 
 coord = p';
 
-q_n = @(T) alpha_c * (T - T_inf);
 C_xy = @(ex,ey) [[1;1;1] ex ey];
 
 B_bar = [0 1 0; 0 0 1];
@@ -64,13 +63,13 @@ for i=1:n_elem
     C = C_xy(ex(i,:)',ey(i,:)');
     Ae = det(C)/2;%*1e-6;
     
-    if mat_index == 3
-       eq = Q/3*thickness*Ae;
+    if mat_index == 4
+       eq = Q;%*thickness*Ae;
     end
     
     %Ke = C' \ B_bar' * D * B_bar / C * thickness * Ae;
     [Ke,fe] = flw2te(ex(i,:),ey(i,:),thickness,D,eq);
-
+    
     K = assem(edof(i,:),K,Ke); %finns snabbare assem i handledning
     
     Ce=plantml(ex(i,:),ey(i,:),rhoe*ce);
@@ -120,8 +119,8 @@ fill(ex',ey',eT','EdgeColor','none')
 title('Temperature distribution [C]')
 colormap(hot);
 colorbar;
-xlabel('x-position [mm]')
-ylabel('y-position [mm]')
+xlabel('x-position [m]')
+ylabel('y-position [m]')
 %axis equal
 
 %DETTA HAR MICKE PRECIS LADDAT UPP
