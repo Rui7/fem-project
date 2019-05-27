@@ -5,6 +5,8 @@ load('e.mat')
 load('p.mat')
 load('t.mat')
 
+p=p*1e-3;
+
 % initialize
 T0 = 25;
 T_inf = 15;
@@ -60,7 +62,7 @@ for i=1:n_elem
     
     eq = 0;
     C = C_xy(ex(i,:)',ey(i,:)');
-    Ae = det(C)/2*1e-6;
+    Ae = det(C)/2;%*1e-6;
     
     if mat_index == 3
        eq = Q/3*thickness*Ae;
