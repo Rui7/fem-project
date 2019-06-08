@@ -122,8 +122,6 @@ Tmin=min(min(Tsnap));
 Tmax=max(max(Tsnap));
 figure()
 for i=1:nsnap
-    Tmin=min(Tsnap(:,i));
-    Tmax=max(Tsnap(:,i));
     eT=extract(edof,Tsnap(:,i));
     subplot(2,2,i)
     fill(ex',ey',eT','EdgeColor','none')
