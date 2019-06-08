@@ -106,12 +106,12 @@ f = sparse(f_l + f_b);
 
 %solve
 a=solveq(Kprim,f);
-dt=2;
-T=8;
-alpha_method=.5; %trapezoidal
+dt=3600*2/4;
+T=3600*8/4;
+alpha_method=1; %implicit
 nsnap = 4;
 nhist=1;
-time=[0,2,4,6];
+time=3600*[0,2,4,6]/4;
 
 ip=[dt,T,alpha_method,[nsnap, nhist, time, dof']];
 pbound=[];
