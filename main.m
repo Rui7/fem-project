@@ -182,11 +182,6 @@ end
 K=sparse(K);
 f0=sparse(f0);
 
-
-
-for i=1:size(er,2)
-end
-
 conv_segments_ux = [14,17];
 conv_segments_uy = [8,9,12,13]; 
 bc = [];

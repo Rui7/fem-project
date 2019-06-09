@@ -24,7 +24,7 @@ function f0 = makef0(ex,ey,D,nu,alpha,t,T,T0)
          Dm=D;
        end
 
-    f0=B'*Dm*(1-nu)*alpha*t*1/3*([1,1,1]*(T-T0))*Ae*[1,1,0]';
+    f0=B'*Dm*(1+nu)*alpha*t*1/3*([1,1,1]*(T-T0))*Ae*[1,1,0]';
 
 end
 
