@@ -163,7 +163,13 @@ edof_dis = (1:n_elem);
 tt=[t(1:3,:)*2-1; t(1:3,:)*2];
 edof_dis = [edof_dis; tt]';
 
-
+%edof_dis2
+edof_dis = zeros(n_elem,7);
+edof_dis(:,1) = (1:n_elem);
+for i=1:n_elem
+    edof_dis(i,2:end) = [t(1,i)*2-1, t(1,i)*2, t(2,i)*2-1, t(2,i)*2, t(3,i)*2-1, t(3,i)*2];
+end
+edof_dis
 for i=1:n_elem
     
     mat_index = subdomain(t(4,i)); % index of material constants
@@ -248,14 +254,18 @@ min(min(eff_e))
 pdis = zeros(size(p));
 udisx = a_dis(1:2:end);
 udisy = a_dis(2:2:end);
-magnitude = 500;
+magnitude = 100;
 pdis(1,:) = p(1,:)+udisx'*magnitude;
 pdis(2,:) = p(2,:)+udisy'*magnitude;
 coorddis = pdis';
 [exdis,eydis]=coordxtr(edof,coorddis,dof,elem_nod);
 figure
+title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C'])
 fill(ex',ey',[0 0 0],'EdgeColor','none','FaceAlpha',0.3)
 hold on
-fill(exdis',eydis',[0 0 0], 'FaceAlpha', 0.3);
+fill(exdis',eydis',[0 0 0],'EdgeColor','none',   'FaceAlpha', 0.3);
+title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C'])
+xlabel('x-position [m]')
+ylabel('y-position [m]')
 margin = 0.01;
 axis([0-margin .025+margin 0-margin .05+margin])
