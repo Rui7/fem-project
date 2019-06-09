@@ -5,6 +5,8 @@ load('e.mat')
 load('p.mat')
 load('t.mat')
 
+plot=0; %ändra till 1 om du vill plotta
+
 p=p*1e-3;
 
 % initialize
@@ -118,31 +120,72 @@ pbound=[];
 
 Tsnap=step1(Kprim,CC,a0,ip,f,pbound);
 
-Tmin=min(min(Tsnap));
-Tmax=max(max(Tsnap));
-figure()
-for i=1:nsnap
-    eT=extract(edof,Tsnap(:,i));
-    subplot(2,2,i)
+if plot == 1 % ändra högst upp om du vill plotta!
+    Tmin=min(min(Tsnap));
+    Tmax=max(max(Tsnap));
+    figure()
+    for i=1:nsnap
+        eT=extract(edof,Tsnap(:,i));
+        subplot(2,2,i)
+        fill(ex',ey',eT','EdgeColor','none')
+        title('Temperature distribution [C]')
+        colormap(hot);
+        colorbar;
+        xlabel('x-position [m]')
+        ylabel('y-position [m]')
+        axis([0 .025 0 .05])
+        caxis([Tmin Tmax])
+    end
+
+    %plot
+    eT=extract(edof,a);
+    figure()
     fill(ex',ey',eT','EdgeColor','none')
     title('Temperature distribution [C]')
     colormap(hot);
     colorbar;
     xlabel('x-position [m]')
     ylabel('y-position [m]')
-    axis([0 .025 0 .05])
-    caxis([Tmin Tmax])
+    %axis equal
 end
 
-%plot
-eT=extract(edof,a);
-figure()
-fill(ex',ey',eT','EdgeColor','none')
-title('Temperature distribution [C]')
-colormap(hot);
-colorbar;
-xlabel('x-position [m]')
-ylabel('y-position [m]')
-%axis equal
+%von Mises
 
+K = zeros(2*n_nod);
+f_0 = zeros(2*n_nod,1);
+
+ptype = 2; %plane strain
+ep = [ptype thickness];
+
+edof_dis = (1:n_elem);
+tt=[t(1:3,:)*2-1; t(1:3,:)*2];
+edof_dis = [edof_dis; tt]';
+
+for i=1:n_elem
     
+    mat_index = subdomain(t(4,i)); % index of material constants
+    D = hooke(ptype,E(mat_index),ny(mat_index));
+    
+    Ke=plante(ex(i,:),ey(i,:),ep,D);
+    K = assem(edof_dis(i,:),K,Ke); %finns snabbare assem i handledning
+    
+    %fe0=plantf(ex,ey,ep,es); %räkna med någon annan funktion, alternativt
+    % kan vi räkna fe0=B^T*D*alpha*(1-nu)*(DeltaT)*t*Ae*[1, 1, 0]
+    % där Ae=det/2 eller [1,1,1,1,0,0]
+    %f0 = insert(edof_dis(i,:),f0,fe0); %finns snabbare insert i handledning
+end
+
+%få ut a-vektorn när vi räknat ut f0
+%a_dis=solveq(K,f0);
+%ed = extract(edof,a_dis);
+   
+% beräkna sigma och epsilon
+%[es,et]=plants(ex,ey,ep,D,ed)
+
+% beräkna von mises
+%mp=[E(mat_index),v(mat_index),h]
+%[es,deps,st] = mises(ptype,mp,est,st)
+
+
+
+
