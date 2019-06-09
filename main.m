@@ -175,17 +175,34 @@ for i=1:n_elem
     nodes=t(1:elem_nod,i);
     T=full(a(nodes));
     
-    fe0=makef0(ex(i,:),ey(i,:),D,nu,alphae,thickness,T,T0); %räkna med någon annan funktion, alternativt
-    % kan vi räkna fe0=B^T*D*alpha*(1-nu)*(DeltaT)*t*Ae*[1, 1, 0]
-    % där Ae=det/2 eller [1,1,1,1,0,0]
+    fe0=makef0(ex(i,:),ey(i,:),D,nu,alphae,thickness,T,T0);
     f0 = insert(edof_dis(i,:),f0,fe0); %finns snabbare insert i handledning
 end
 
 K=sparse(K);
 f0=sparse(f0);
 
+
+
+for i=1:size(er,2)
+end
+
+conv_segments_ux = [14,17];
+conv_segments_uy = [8,9,12,13]; 
+bc = [];
+for i = 1:size(er,2)
+    if ismember(er(3,i),conv_segments_ux)
+        bc_el=[er(1:2,i)*2-1 [0;0]];
+        bc=[bc;bc_el];
+    elseif ismember(er(3,i),conv_segments_uy)
+        bc_el=[er(1:2,i)*2 [0;0]];
+        bc=[bc;bc_el];
+    end
+end
+bc=unique(bc,'rows');
+
 %få ut a-vektorn när vi räknat ut f0
-a_dis=solveq(K,f0);
+a_dis=solveq(K,f0,bc);
 ed = extract(edof_dis,a_dis);
    
 %Seff=zeros();
@@ -197,10 +214,10 @@ for i=1:n_elem
     
     %beräkna von mises
     h=0;
-    mp=[E(mat_index),ny(mat_index),h];
+    st=[0 0 0];
+    %est=0;
+    %mp=[E(mat_index),ny(mat_index),h];
     %[es,deps,st] = mises(ptype,mp,est,st);
 end
-
-
 
 
