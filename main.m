@@ -152,7 +152,7 @@ end
 %von Mises
 
 K = zeros(2*n_nod);
-f_0 = zeros(2*n_nod,1);
+f0 = zeros(2*n_nod,1);
 
 ptype = 2; %plane strain
 ep = [ptype thickness];
@@ -161,32 +161,42 @@ edof_dis = (1:n_elem);
 tt=[t(1:3,:)*2-1; t(1:3,:)*2];
 edof_dis = [edof_dis; tt]';
 
+
 for i=1:n_elem
     
     mat_index = subdomain(t(4,i)); % index of material constants
     D = hooke(ptype,E(mat_index),ny(mat_index));
+    nu=ny(mat_index);
+    alphae =alpha(mat_index);
     
     Ke=plante(ex(i,:),ey(i,:),ep,D);
     K = assem(edof_dis(i,:),K,Ke); %finns snabbare assem i handledning
     
-    %fe0=plantf(ex,ey,ep,es); %räkna med någon annan funktion, alternativt
+    nodes=t(1:elem_nod,i);
+    T=full(a(nodes));
+    
+    fe0=makef0(ex(i,:),ey(i,:),D,nu,alphae,thickness,T,T0); %räkna med någon annan funktion, alternativt
     % kan vi räkna fe0=B^T*D*alpha*(1-nu)*(DeltaT)*t*Ae*[1, 1, 0]
     % där Ae=det/2 eller [1,1,1,1,0,0]
-    %f0 = insert(edof_dis(i,:),f0,fe0); %finns snabbare insert i handledning
+    f0 = insert(edof_dis(i,:),f0,fe0); %finns snabbare insert i handledning
 end
 
-%få ut a-vektorn när vi räknat ut f0
-%a_dis=solveq(K,f0);
-%ed = extract(edof,a_dis);
-   
-%for i=1:n_elm
-% beräkna sigma och epsilon i en for-loop
-%[es,et]=plants(ex,ey,ep,D,ed)
+K=sparse(K);
+f0=sparse(f0);
 
-% beräkna von mises i for-loopen ovan
-%mp=[E(mat_index),v(mat_index),h]
-%[es,deps,st] = mises(ptype,mp,est,st)
-%end
+%få ut a-vektorn när vi räknat ut f0
+a_dis=solveq(K,f0);
+ed = extract(edof,a_dis);
+   
+%Seff=zeros();
+for i=1:1%n_elem
+    %beräkna sigma och epsilon i en for-loop
+    %[es,et]=plants(ex(i,:),ey(i,:),ep,D,ed);
+
+    %beräkna von mises i for-loopen ovan
+    %mp=[E(mat_index),v(mat_index),h];
+    %[es,deps,st] = mises(ptype,mp,est,st);
+end
 
 
 
