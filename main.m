@@ -179,12 +179,14 @@ end
 %a_dis=solveq(K,f0);
 %ed = extract(edof,a_dis);
    
-% beräkna sigma och epsilon
+%for i=1:n_elm
+% beräkna sigma och epsilon i en for-loop
 %[es,et]=plants(ex,ey,ep,D,ed)
 
-% beräkna von mises
+% beräkna von mises i for-loopen ovan
 %mp=[E(mat_index),v(mat_index),h]
 %[es,deps,st] = mises(ptype,mp,est,st)
+%end
 
 
 
