@@ -12,7 +12,7 @@ p=p*1e-3;
 % initialize
 T0 = 25;
 T_inf = 15;
-%T_inf = 25; %uppgift b
+T_inf = 25; %uppgift b
 Q = 1e5;
 %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -108,12 +108,14 @@ f = sparse(f_l + f_b);
 
 %solve
 a=solveq(Kprim,f);
+f=Kprim*a;
+
 dt=3600*2/4;
-T=3600*8/4;
+T=3600*10/4;
 alpha_method=1; %implicit
 nsnap = 4;
 nhist=1;
-time=3600*[0,2,4,6]/4;
+time=3600*[2,4,6,8]/4;
 
 ip=[dt,T,alpha_method,[nsnap, nhist, time, dof']];
 pbound=[];
@@ -121,14 +123,38 @@ pbound=[];
 Tsnap=step1(Kprim,CC,a0,ip,f,pbound);
 
 eT=extract(edof,a);
-maxT=max(max(full(eT)))
+%maxT=max(max(full(eT)))
+
+maxT=zeros(nsnap,1);
+% 
+% step_size=.5*3600;
+% init=.5*3600;
+% steps=3;
+% time=init:step_size:init+steps*step_size;
+% 
+% 
+% next_step=step_size*Kprim+CC;
+% prev_step=CC*a+step_size*f;
+% 
+% an=solveq(next_step,prev_step)
 
 if plot == 1 % ändra högst upp om du vill plotta!
+    %plot
+    figure()
+    fill(ex',ey',eT','EdgeColor','none')
+    title('Temperature distribution [C]')
+    colormap(hot);
+    colorbar;
+    xlabel('x-position [m]')
+    ylabel('y-position [m]')
+    %axis equal
+    
     Tmin=min(min(Tsnap));
     Tmax=max(max(Tsnap));
     figure()
     for i=1:nsnap
         eT=extract(edof,Tsnap(:,i));
+        maxT(i) = max(max(eT));
         subplot(2,2,i)
         fill(ex',ey',eT','EdgeColor','none')
         title(['Temperature distribution [C] at T=',num2str(time(i)/3600),'h'])
@@ -139,16 +165,6 @@ if plot == 1 % ändra högst upp om du vill plotta!
         axis([0 .025 0 .05])
         %caxis([Tmin Tmax])
     end
-
-    %plot
-    figure()
-    fill(ex',ey',eT','EdgeColor','none')
-    title('Temperature distribution [C]')
-    colormap(hot);
-    colorbar;
-    xlabel('x-position [m]')
-    ylabel('y-position [m]')
-    %axis equal
 end
 
 %von Mises
@@ -162,7 +178,6 @@ ep = [ptype thickness];
 edof_dis = (1:n_elem);
 tt=[t(1:3,:)*2-1; t(1:3,:)*2];
 edof_dis = [edof_dis; tt]';
-
 %edof_dis2
 edof_dis = zeros(n_elem,7);
 edof_dis(:,1) = (1:n_elem);
@@ -170,6 +185,7 @@ for i=1:n_elem
     edof_dis(i,2:end) = [t(1,i)*2-1, t(1,i)*2, t(2,i)*2-1, t(2,i)*2, t(3,i)*2-1, t(3,i)*2];
 end
 edof_dis
+
 for i=1:n_elem
     
     mat_index = subdomain(t(4,i)); % index of material constants
@@ -247,6 +263,7 @@ ylabel('y-position [m]')
 axis([0 .025 0 .05])
 [Y,I] = max(eff);
 I
+
 max(max(eff_e))
 min(min(eff_e))
 
@@ -254,7 +271,11 @@ min(min(eff_e))
 pdis = zeros(size(p));
 udisx = a_dis(1:2:end);
 udisy = a_dis(2:2:end);
+<<<<<<< HEAD
 magnitude = 100;
+=======
+magnitude = 1000;
+>>>>>>> 0069d95dd8bca45d55698b5a1c6321e23905f8a6
 pdis(1,:) = p(1,:)+udisx'*magnitude;
 pdis(2,:) = p(2,:)+udisy'*magnitude;
 coorddis = pdis';
