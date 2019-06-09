@@ -11,10 +11,6 @@ p=p*1e-3;
 
 % initialize values
 T0 = 25;
-T_inf = 15;
-T_inf = 25; %uppgift b
-Q = 1e5;
-%Q = 1e5*1.6^2; %uppgift a, del2
 T_inf = 15; %T_inf = 25; %uppgift b
 Q = 1e5; %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -224,7 +220,7 @@ end
 
 eff_e = extract(edof, eff_nod);
 [value index] = max(eff_nod)
-p(:,index)
+p(:,index);
 
 % plotting von mises
 figure
@@ -235,11 +231,9 @@ colorbar;
 xlabel('x-position [m]')
 ylabel('y-position [m]')
 axis([0 .025 0 .05])
-%[Y,I] = max(eff);
-%I
 
-max(max(eff_e))
-min(min(eff_e))
+max(max(eff_e));
+min(min(eff_e));
 [Y,I] = max(eff);
 
 % plotting displacements
@@ -257,9 +251,6 @@ fill(ex',ey',[0 0 0],'EdgeColor','none','FaceAlpha',0.3)
 hold on
 fill(exdis',eydis',[0 0 0],'FaceAlpha', 0.3);
 title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C']) 
-fill(exdis',eydis',[0 0 0], 'FaceAlpha', 0.3);
-fill(exdis',eydis',[0 0 0],'EdgeColor','none',   'FaceAlpha', 0.3);
-title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C'])
 xlabel('x-position [m]')
 ylabel('y-position [m]')
 margin = 0.01;
