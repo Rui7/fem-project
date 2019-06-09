@@ -1,4 +1,7 @@
 function mat = subdomain(number)
+%SUBDOMAIN Get material index
+%   mat = subdomain(number)
+%   where 1=Aluminium, 2=Steel, 3=Copper, 4=Electricity core
     if number == 1
         mat = 4;
     end
