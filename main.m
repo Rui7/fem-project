@@ -275,6 +275,7 @@ figure
 title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C'])
 fill(ex',ey',[0 0 0],'EdgeColor','none','FaceAlpha',0.3)
 hold on
+fill(exdis',eydis',[0 0 0], 'FaceAlpha', 0.3);
 fill(exdis',eydis',[0 0 0],'EdgeColor','none',   'FaceAlpha', 0.3);
 title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C'])
 xlabel('x-position [m]')
