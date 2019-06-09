@@ -121,14 +121,29 @@ pbound=[];
 Tsnap=step1(Kprim,CC,a0,ip,f,pbound);
 
 eT=extract(edof,a);
-maxT=max(max(full(eT)))
+%maxT=max(max(full(eT)))
+
+maxT=zeros(nsnap,1);
+
+
 
 if plot == 1 % ändra högst upp om du vill plotta!
+    %plot
+    figure()
+    fill(ex',ey',eT','EdgeColor','none')
+    title('Temperature distribution [C]')
+    colormap(hot);
+    colorbar;
+    xlabel('x-position [m]')
+    ylabel('y-position [m]')
+    %axis equal
+    
     Tmin=min(min(Tsnap));
     Tmax=max(max(Tsnap));
     figure()
     for i=1:nsnap
         eT=extract(edof,Tsnap(:,i));
+        maxT(i) = max(max(eT));
         subplot(2,2,i)
         fill(ex',ey',eT','EdgeColor','none')
         title(['Temperature distribution [C] at T=',num2str(time(i)/3600),'h'])
@@ -139,16 +154,6 @@ if plot == 1 % ändra högst upp om du vill plotta!
         axis([0 .025 0 .05])
         %caxis([Tmin Tmax])
     end
-
-    %plot
-    figure()
-    fill(ex',ey',eT','EdgeColor','none')
-    title('Temperature distribution [C]')
-    colormap(hot);
-    colorbar;
-    xlabel('x-position [m]')
-    ylabel('y-position [m]')
-    %axis equal
 end
 
 %von Mises
@@ -241,6 +246,7 @@ ylabel('y-position [m]')
 axis([0 .025 0 .05])
 [Y,I] = max(eff);
 I
+
 max(max(eff_e))
 min(min(eff_e))
 
@@ -248,7 +254,7 @@ min(min(eff_e))
 pdis = zeros(size(p));
 udisx = a_dis(1:2:end);
 udisy = a_dis(2:2:end);
-magnitude = 500;
+magnitude = 1000;
 pdis(1,:) = p(1,:)+udisx'*magnitude;
 pdis(2,:) = p(2,:)+udisy'*magnitude;
 coorddis = pdis';
