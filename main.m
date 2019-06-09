@@ -5,14 +5,14 @@ load('e.mat')
 load('p.mat')
 load('t.mat')
 
-plot=0; %ändra till 1 om du vill plotta
+plot=1; %ändra till 1 om du vill plotta
 
 p=p*1e-3;
 
 % initialize
 T0 = 25;
 T_inf = 15;
-%T_inf = 25; %uppgift b
+T_inf = 25; %uppgift b
 Q = 1e5;
 %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -71,7 +71,7 @@ for i=1:n_elem
     
     K = assem(edof(i,:),K,Ke); %finns snabbare assem i handledning
     
-    Ce=plantml(ex(i,:),ey(i,:),rhoe*ce);
+    Ce=plantml(ex(i,:),ey(i,:),rhoe*ce*thickness);
     CC=assem(edof(i,:),CC,Ce);
     
     %fe = Q/3*thickness*Ae*[1;1;1];
