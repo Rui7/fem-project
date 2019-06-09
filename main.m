@@ -12,7 +12,7 @@ p=p*1e-3;
 % initialize
 T0 = 25;
 T_inf = 15;
-%T_inf = 25; %uppgift b
+T_inf = 25; %uppgift b
 Q = 1e5;
 %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -108,12 +108,14 @@ f = sparse(f_l + f_b);
 
 %solve
 a=solveq(Kprim,f);
+f=Kprim*a;
+
 dt=3600*2/4;
-T=3600*8/4;
+T=3600*10/4;
 alpha_method=1; %implicit
 nsnap = 4;
 nhist=1;
-time=3600*[0,2,4,6]/4;
+time=3600*[2,4,6,8]/4;
 
 ip=[dt,T,alpha_method,[nsnap, nhist, time, dof']];
 pbound=[];
@@ -124,8 +126,17 @@ eT=extract(edof,a);
 %maxT=max(max(full(eT)))
 
 maxT=zeros(nsnap,1);
-
-
+% 
+% step_size=.5*3600;
+% init=.5*3600;
+% steps=3;
+% time=init:step_size:init+steps*step_size;
+% 
+% 
+% next_step=step_size*Kprim+CC;
+% prev_step=CC*a+step_size*f;
+% 
+% an=solveq(next_step,prev_step)
 
 if plot == 1 % ändra högst upp om du vill plotta!
     %plot
