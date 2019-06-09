@@ -12,7 +12,7 @@ p=p*1e-3;
 % initialize
 T0 = 25;
 T_inf = 15;
-T_inf = 25; %uppgift b
+%T_inf = 25; %uppgift b
 Q = 1e5;
 %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -252,7 +252,8 @@ for i = 1:size(eff_nod)
 end
 
 eff_e = extract(edof, eff_nod);
-
+[value index] = max(eff_nod)
+p(:,index)
 figure
 fill(ex',ey',eff_e')%,'EdgeColor','none')
 colorbar
@@ -261,8 +262,8 @@ colorbar;
 xlabel('x-position [m]')
 ylabel('y-position [m]')
 axis([0 .025 0 .05])
-[Y,I] = max(eff);
-I
+%[Y,I] = max(eff);
+%I
 
 max(max(eff_e))
 min(min(eff_e))
@@ -271,11 +272,8 @@ min(min(eff_e))
 pdis = zeros(size(p));
 udisx = a_dis(1:2:end);
 udisy = a_dis(2:2:end);
-<<<<<<< HEAD
-magnitude = 100;
-=======
-magnitude = 1000;
->>>>>>> 0069d95dd8bca45d55698b5a1c6321e23905f8a6
+magnitude = 200;
+
 pdis(1,:) = p(1,:)+udisx'*magnitude;
 pdis(2,:) = p(2,:)+udisy'*magnitude;
 coorddis = pdis';
@@ -284,8 +282,8 @@ figure
 title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C'])
 fill(ex',ey',[0 0 0],'EdgeColor','none','FaceAlpha',0.3)
 hold on
-fill(exdis',eydis',[0 0 0],'EdgeColor','none',   'FaceAlpha', 0.3);
-title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C'])
+fill(exdis',eydis',[0 0 0],'FaceAlpha', 0.3);
+title(['Displacement field with T_{\infty}= ',num2str(T_inf), '°C']) 
 xlabel('x-position [m]')
 ylabel('y-position [m]')
 margin = 0.01;
