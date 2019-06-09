@@ -221,3 +221,20 @@ for i=1:n_elem
 end
 
 
+
+
+%plotting displacements
+pdis = zeros(size(p));
+udisx = a_dis(1:2:end);
+udisy = a_dis(2:2:end);
+magnitude = 100;
+pdis(1,:) = p(1,:)+udisx'*magnitude;
+pdis(2,:) = p(2,:)+udisy'*magnitude;
+coorddis = pdis';
+[exdis,eydis]=coordxtr(edof,coorddis,dof,elem_nod);
+figure
+fill(ex',ey',[0 0 0],'EdgeColor','none','FaceAlpha',0.3)
+hold on
+fill(exdis',eydis',[0 0 0], 'FaceAlpha', 0.3);
+margin = 0.01;
+axis([0-margin .025+margin 0-margin .05+margin])
