@@ -5,14 +5,14 @@ load('e.mat')
 load('p.mat')
 load('t.mat')
 
-plot=1; %ändra till 1 om du vill plotta
+plot=0; %ändra till 1 om du vill plotta
 
 p=p*1e-3;
 
 % initialize
 T0 = 25;
 T_inf = 15;
-T_inf = 25; %uppgift b
+%T_inf = 25; %uppgift b
 Q = 1e5;
 %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -120,6 +120,9 @@ pbound=[];
 
 Tsnap=step1(Kprim,CC,a0,ip,f,pbound);
 
+eT=extract(edof,a);
+maxT=max(max(full(eT)))
+
 if plot == 1 % ändra högst upp om du vill plotta!
     Tmin=min(min(Tsnap));
     Tmax=max(max(Tsnap));
@@ -138,7 +141,6 @@ if plot == 1 % ändra högst upp om du vill plotta!
     end
 
     %plot
-    eT=extract(edof,a);
     figure()
     fill(ex',ey',eT','EdgeColor','none')
     title('Temperature distribution [C]')
@@ -201,28 +203,35 @@ a_dis=solveq(K,f0,bc);
 ed = extract(edof_dis,a_dis);
    
 %Seff=zeros();
+s=zeros(n_elem,4);
 for i=1:n_elem
     mat_index = subdomain(t(4,i)); % index of material constants
     
     %beräkna sigma och epsilon
     [es,et]=plants(ex(i,:),ey(i,:),ep,D,ed);
+    s = s+es;
     
     %beräkna von mises
     h=0;
-    st=[0 0 0];
+    %st=[0 0 0];
     %est=0;
     %mp=[E(mat_index),ny(mat_index),h];
     %[es,deps,st] = mises(ptype,mp,est,st);
 end
 
+vonmises = @(es) sqrt(es(:,1).*es(:,1) + es(:,2).*es(:,2) + es(:,3).*es(:,3) ... 
+    - es(:,1).*es(:,2) -  es(:,1).*es(:,3) - es(:,2).*es(:,3) + 3* es(:,4).*es(:,4));
 
+eff=vonmises(s);
+[Y,I] = max(eff);
+I
 
 
 %plotting displacements
 pdis = zeros(size(p));
 udisx = a_dis(1:2:end);
 udisy = a_dis(2:2:end);
-magnitude = 100;
+magnitude = 500;
 pdis(1,:) = p(1,:)+udisx'*magnitude;
 pdis(2,:) = p(2,:)+udisy'*magnitude;
 coorddis = pdis';
