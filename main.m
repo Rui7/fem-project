@@ -5,7 +5,7 @@ load('e.mat')
 load('p.mat')
 load('t.mat')
 
-plot=0; %ändra till 1 om du vill plotta
+plot=1; %ändra till 1 om du vill plotta
 
 p=p*1e-3;
 
@@ -128,13 +128,13 @@ if plot == 1 % ändra högst upp om du vill plotta!
         eT=extract(edof,Tsnap(:,i));
         subplot(2,2,i)
         fill(ex',ey',eT','EdgeColor','none')
-        title('Temperature distribution [C]')
+        title(['Temperature distribution [C] at T=',num2str(time(i)/3600),'h'])
         colormap(hot);
         colorbar;
         xlabel('x-position [m]')
         ylabel('y-position [m]')
         axis([0 .025 0 .05])
-        caxis([Tmin Tmax])
+        %caxis([Tmin Tmax])
     end
 
     %plot
