@@ -184,7 +184,6 @@ edof_dis(:,1) = (1:n_elem);
 for i=1:n_elem
     edof_dis(i,2:end) = [t(1,i)*2-1, t(1,i)*2, t(2,i)*2-1, t(2,i)*2, t(3,i)*2-1, t(3,i)*2];
 end
-edof_dis
 
 for i=1:n_elem
     
@@ -262,20 +261,12 @@ xlabel('x-position [m]')
 ylabel('y-position [m]')
 axis([0 .025 0 .05])
 [Y,I] = max(eff);
-I
-
-max(max(eff_e))
-min(min(eff_e))
 
 %plotting displacements
 pdis = zeros(size(p));
 udisx = a_dis(1:2:end);
 udisy = a_dis(2:2:end);
-<<<<<<< HEAD
 magnitude = 100;
-=======
-magnitude = 1000;
->>>>>>> 0069d95dd8bca45d55698b5a1c6321e23905f8a6
 pdis(1,:) = p(1,:)+udisx'*magnitude;
 pdis(2,:) = p(2,:)+udisy'*magnitude;
 coorddis = pdis';
