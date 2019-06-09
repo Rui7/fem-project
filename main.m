@@ -186,15 +186,18 @@ f0=sparse(f0);
 
 %få ut a-vektorn när vi räknat ut f0
 a_dis=solveq(K,f0);
-ed = extract(edof,a_dis);
+ed = extract(edof_dis,a_dis);
    
 %Seff=zeros();
-for i=1:1%n_elem
-    %beräkna sigma och epsilon i en for-loop
-    %[es,et]=plants(ex(i,:),ey(i,:),ep,D,ed);
-
-    %beräkna von mises i for-loopen ovan
-    %mp=[E(mat_index),v(mat_index),h];
+for i=1:n_elem
+    mat_index = subdomain(t(4,i)); % index of material constants
+    
+    %beräkna sigma och epsilon
+    [es,et]=plants(ex(i,:),ey(i,:),ep,D,ed);
+    
+    %beräkna von mises
+    h=0;
+    mp=[E(mat_index),ny(mat_index),h];
     %[es,deps,st] = mises(ptype,mp,est,st);
 end
 
