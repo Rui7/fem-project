@@ -1,5 +1,5 @@
 function f0 = makef0(ex,ey,D,nu,alpha,t,T,T0)
-%UNTITLED2 Summary of this function goes here
+%MAKEF0 Calculate the f0 vector
 %   f0 = makef0(ex,ey,D,nu,alpha,t,T,T0)
 
     Ae=1/2*det([ones(3,1) ex' ey']);
@@ -13,7 +13,6 @@ function f0 = makef0(ex,ey,D,nu,alpha,t,T,T0)
 
     B=[0 1 0 0 0 0
        0 0 0 0 0 1
-%      0 0 0 0 0 0
        0 0 1 0 1 0]*inv(C);
    
    colD=size(D,2);
