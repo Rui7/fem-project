@@ -12,7 +12,7 @@ p=p*1e-3;
 % initialize
 T0 = 25;
 T_inf = 15;
-T_inf = 25; %uppgift b
+%T_inf = 25; %uppgift b
 Q = 1e5;
 %Q = 1e5*1.6^2; %uppgift a, del2
 alpha_c = 100;
@@ -184,7 +184,7 @@ end
 K=sparse(K);
 f0=sparse(f0);
 
-conv_segments_ux = [14,17];
+conv_segments_ux = [14,17 ];
 conv_segments_uy = [8,9,12,13]; 
 bc = [];
 for i = 1:size(er,2)
@@ -223,9 +223,26 @@ vonmises = @(es) sqrt(es(:,1).*es(:,1) + es(:,2).*es(:,2) + es(:,3).*es(:,3) ...
     - es(:,1).*es(:,2) -  es(:,1).*es(:,3) - es(:,2).*es(:,3) + 3* es(:,4).*es(:,4));
 
 eff=vonmises(s);
+eff_nod = zeros(size(p,2),1);
+for i = 1:size(eff_nod)
+    [c0 , c1] = find(edof(:,2:4)==i);
+    eff_nod(i,1) = sum(eff(c0)/size(c0,1));
+end
+
+eff_e = extract(edof, eff_nod);
+
+figure
+fill(ex',ey',eff_e')%,'EdgeColor','none')
+colorbar
+title(['Von Mises Stresses at Stationary with T_{\infty}= ',num2str(T_inf), '°C'])
+colorbar;
+xlabel('x-position [m]')
+ylabel('y-position [m]')
+axis([0 .025 0 .05])
 [Y,I] = max(eff);
 I
-
+max(max(eff_e))
+min(min(eff_e))
 
 %plotting displacements
 pdis = zeros(size(p));
